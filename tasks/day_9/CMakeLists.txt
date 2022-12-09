@@ -2,7 +2,7 @@ project(AoC-2022-day_9)
 
 cmake_minimum_required(VERSION 3.24)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/src/)
