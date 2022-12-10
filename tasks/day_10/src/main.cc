@@ -29,7 +29,8 @@ int delay(CommandType command_type);
 
 Command toCommand(const std::string &line);
 
-int strengthAt(std::vector<int> &x, int at);
+int strengthAt(const std::vector<int> &x, int at);
+std::vector<int> xOverTime(std::vector<Command> &commands);
 
 int main(int argc, char **argv) {
   const auto args = utilities::to_args({argc, argv});
@@ -43,31 +44,23 @@ int main(int argc, char **argv) {
 int task_1(const std::vector<std::string> &lines) {
   std::vector<Command> commands;
   std::ranges::transform(lines, std::back_inserter(commands), toCommand);
-
-  std::vector<int> x(1, 1);
-
-  for (int i{0}; i < std::ssize(commands) && i < std::ssize(x); ++i) {
-    const int last = x.empty() ? 1 : x.back();
-    switch (commands[i].command) {
-    case CommandType::addx:
-      x.push_back(last);
-      x.push_back(last + commands[i].value);
-      break;
-    case CommandType::noop:
-      x.push_back(last);
-      break;
-    default:
-      throw std::runtime_error("Wrong command type!");
-    }
-  }
-
+  const auto x = xOverTime(commands);
   return strengthAt(x, 20) + strengthAt(x, 60) + strengthAt(x, 100) +
          strengthAt(x, 140) + strengthAt(x, 180) + strengthAt(x, 220);
 }
 
 int task_2(const std::vector<std::string> &lines) {
-  int sum{0};
-  return sum;
+  std::vector<Command> commands;
+  std::ranges::transform(lines, std::back_inserter(commands), toCommand);
+  const auto x = xOverTime(commands);
+  std::cout << '\n';
+  for (int line{0}; line < 6; ++line) {
+    for (int column{0}; column < 40; ++column) {
+      std::cout << (std::abs(x[line * 40 + column] - column) <= 1 ? '#' : ' ');
+    }
+    std::cout << '\n';
+  }
+  return 0;
 }
 
 Command toCommand(const std::string &line) {
@@ -94,4 +87,25 @@ int delay(CommandType command_type) {
   }
 }
 
-int strengthAt(std::vector<int> &x, int at) { return at * x.at(at - 1); }
+int strengthAt(const std::vector<int> &x, int at) { return at * x.at(at - 1); }
+
+std::vector<int> xOverTime(std::vector<Command> &commands) {
+
+  std::vector<int> x(1, 1);
+
+  for (int i{0}; i < std::ssize(commands) && i < std::ssize(x); ++i) {
+    const int last = x.empty() ? 1 : x.back();
+    switch (commands[i].command) {
+    case CommandType::addx:
+      x.push_back(last);
+      x.push_back(last + commands[i].value);
+      break;
+    case CommandType::noop:
+      x.push_back(last);
+      break;
+    default:
+      throw std::runtime_error("Wrong command type!");
+    }
+  }
+  return x;
+}
