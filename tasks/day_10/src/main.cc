@@ -1,7 +1,6 @@
 #include "arg_to_vec.h"
 #include "file_loader.h"
 
-#include <__iterator/size.h>
 #include <algorithm>
 #include <iostream>
 #include <iterator>
